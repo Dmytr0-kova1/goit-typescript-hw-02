@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.text {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.17;
+  letter-spacing: 0.03em;
+}

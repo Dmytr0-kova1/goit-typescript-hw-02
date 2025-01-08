@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
+  height: 50px;
+}
+
+.form {
+  width: 400px;
+  display: flex;
+  flex-direction: row-reverse;
+  border: 1px solid #000;
+  border-radius: 4px;
+  height: 20px;
+  background-color: #fff;
+  padding: 5px;
+}
+
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.btn {
+  background-color: transparent;
+}
