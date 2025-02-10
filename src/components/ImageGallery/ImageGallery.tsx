@@ -1,16 +1,22 @@
+import { Image } from "../../services/api";
 import ImageCard from "../ImageCard/ImageCard";
 import s from "./ImageGallery.module.css";
 
-const ImageGallery = ({ img, onClickImg }) => {
+interface Props {
+  images: Image[];
+  onClick: (image: Image) => void;
+}
+
+const ImageGallery: React.FC<Props> = ({ images, onClick }) => {
   return (
     <ul className={s.list}>
-      {img.map((item) => (
-        <li key={item.id}>
+      {images.map((image) => (
+        <li key={image.id}>
           <ImageCard
-            src={item.urls.small}
-            alt={item.alt_description}
-            onClickImg={onClickImg}
-            item={item}
+            src={image.urls.small}
+            alt={image.alt_description || "Image"}
+            onClick={onClick}
+            image={image}
           />
         </li>
       ))}

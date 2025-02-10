@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
-import fetchPhotos from "./services/api";
+import fetchPhotos, { Image } from "./services/api";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Loader from "./components/Loader/Loader";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
@@ -8,13 +8,13 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ImageModal from "./components/ImageModal/ImageModal";
 
 function App() {
-  const [query, setQuery] = useState("");
-  const [images, setImages] = useState([]);
-  const [page, setPage] = useState();
-  const [isError, setIsError] = useState(false);
+  const [query, setQuery] = useState<string>("");
+  const [images, setImages] = useState<Image[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!query) return;
@@ -22,11 +22,12 @@ function App() {
     const renderPhotos = async () => {
       try {
         setIsLoading(true);
+        setError(null);
 
         const { results } = await fetchPhotos(query, page);
         setImages((prev) => [...prev, ...results]);
-      } catch (_) {
-        setIsError(true);
+      } catch (error: any) {
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -35,7 +36,7 @@ function App() {
     renderPhotos();
   }, [query, page]);
 
-  const getQueryInput = (newPhoto) => {
+  const handleSearch = (newPhoto: string) => {
     if (newPhoto === query) return;
 
     setQuery(newPhoto);
@@ -43,11 +44,11 @@ function App() {
     setPage(1);
   };
 
-  const handleClick = () => {
+  const handleClickLoadMore = () => {
     setPage((prev) => prev + 1);
   };
 
-  const handleModelImage = (image) => {
+  const handleModelImage = (image: Image) => {
     setSelectedImage(image);
     setIsModalOpen(true);
   };
@@ -58,20 +59,20 @@ function App() {
   };
 
   return (
-    <>
-      <SearchBar onSubmit={getQueryInput} />
-      {isError && <ErrorMessage />}
+    <div>
+      <SearchBar onSubmit={handleSearch} />
+      {error && <ErrorMessage message={error} />}
       {images.length > 0 && (
-        <ImageGallery img={images} onClickImg={handleModelImage} />
+        <ImageGallery images={images} onClick={handleModelImage} />
       )}
       {isLoading && <Loader />}
-      {page && <LoadMoreBtn click={handleClick} />}
+      {images.length > 0 && <LoadMoreBtn onClick={handleClickLoadMore} />}
       <ImageModal
         image={selectedImage}
         isOpen={isModalOpen}
         onCloseModal={handleCloseModal}
       />
-    </>
+    </div>
   );
 }
 

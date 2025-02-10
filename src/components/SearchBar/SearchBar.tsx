@@ -1,12 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import s from "./SearchBar.module.css";
 import { CiSearch } from "react-icons/ci";
 import toast, { Toaster } from "react-hot-toast";
 
-const SearchBar = ({ onSubmit }) => {
+interface Props {
+  onSubmit: (newPhoto: string) => void;
+}
+
+const SearchBar: React.FC<Props> = ({ onSubmit }) => {
   const [query, setQuery] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (query.trim() === "") {
@@ -18,7 +22,7 @@ const SearchBar = ({ onSubmit }) => {
     setQuery("");
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value.toLowerCase());
   };
 
